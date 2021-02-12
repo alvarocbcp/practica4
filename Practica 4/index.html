@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practica 4</title>
+    <link rel="stylesheet" href="css/arrow.css">
+    <link rel="stylesheet" href="css/estilosJuego.css">
+    <script src="js/app.js"></script>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    
+    <!--Template introduccion-->
+    <template id="intro">
+        <link rel="stylesheet" href="css/estilosIntro.css">
+        <div class="container-instrucciones">
+            <div class="titulo hijo-instrucciones">
+                <h2>SNAKE GAME</h2>
+            </div>
+            <div class="controles hijo-instrucciones">
+                <p>Muévete e intenta no chocar con las paredes ni comerte a ti mismo. Selecciona la dificultad más abajo</p>
+                <hr>
+                <h4>CONTROLES</h4>
+                <div class="container-iconos">
+                    <span class="icon-up-big"></span><span class="icon-left-big"></span><span class="icon-down-big"></span><span class="icon-right-big"></span>
+                </div>
+            </div>
+            <div class="dificultad">
+                <div class="facil hijo-dificultad">FACIL</div>
+                <div class="intermedio hijo-dificultad">INTERMEDIO</div>
+                <div class="dificil hijo-dificultad">DIFICIL</div>
+            </div>
+            <div class="boton-start hijo-instrucciones">
+                <p>¡START!</p>
+            </div>
+        </div>
+    </template>
+    <elemento-introduccion></elemento-introduccion>
+
+    
+    <div class="container-juego">
+        <div class="cabecera">
+            <ul>
+                <li><p>Tiempo: <span id="tiempo">0</span></p></li>
+                <li><p>Puntos: <span id="puntos">0</span></p></li>
+            </ul>
+        </div>
+        <div id="tablero"></div>
+    </div>
+
+
+
+    <template id="gameOver">
+        <link rel="stylesheet" href="css/estilosGameOver.css">
+        <div class="container-gameOver">
+            <div class="informacion">
+                <h2 class="titulo-gameOver">GAME OVER</h2>
+                <div class="resultados">
+                    <p>Tiempo: <span class="tiempo-gameOver"></span></p>
+                    <p>Puntos: <span class="puntos-gameOver"></span></p>
+                </div>
+                <div class="salir">
+                    <h4>SALIR</h4>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <elemento-gameover></elemento-gameover>
+
+    
+
+</body>
+</html>

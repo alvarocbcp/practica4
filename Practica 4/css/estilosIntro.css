@@ -1,0 +1,147 @@
+/*Estilos de los iconos usados*/ 
+
+@font-face {
+    font-family: 'arrow';
+    src: url('../font/arrow.eot?24352292');
+    src: url('../font/arrow.eot?24352292#iefix') format('embedded-opentype'),
+         url('../font/arrow.woff2?24352292') format('woff2'),
+         url('../font/arrow.woff?24352292') format('woff'),
+         url('../font/arrow.ttf?24352292') format('truetype'),
+         url('../font/arrow.svg?24352292#arrow') format('svg');
+    font-weight: normal;
+    font-style: normal;
+  }
+  /* Chrome hack: SVG is rendered more smooth in Windozze. 100% magic, uncomment if you need it. */
+  /* Note, that will break hinting! In other OS-es font will be not as sharp as it could be */
+  /*
+  @media screen and (-webkit-min-device-pixel-ratio:0) {
+    @font-face {
+      font-family: 'arrow';
+      src: url('../font/arrow.svg?24352292#arrow') format('svg');
+    }
+  }
+  */
+   
+   [class^="icon-"]:before, [class*=" icon-"]:before {
+    font-family: "arrow";
+    font-style: normal;
+    font-weight: normal;
+    speak: never;
+   
+    display: inline-block;
+    text-decoration: inherit;
+    width: 1em;
+    margin-right: .2em;
+    text-align: center;
+    /* opacity: .8; */
+   
+    /* For safety - reset parent styles, that can break glyph codes*/
+    font-variant: normal;
+    text-transform: none;
+   
+    /* fix buttons height, for twitter bootstrap */
+    line-height: 1em;
+   
+    /* Animation center compensation - margins should be symmetric */
+    /* remove if not needed */
+    margin-left: .2em;
+   
+    /* you can be more comfortable with increased icons size */
+    /* font-size: 120%; */
+   
+    /* Font smoothing. That was taken from TWBS */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+   
+    /* Uncomment for 3D effect */
+    /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
+  }
+   
+  .icon-down-big:before { content: '\e800'; } /* '' */
+  .icon-left-big:before { content: '\e801'; } /* '' */
+  .icon-right-big:before { content: '\e802'; } /* '' */
+  .icon-up-big:before { content: '\e803'; } /* '' */
+
+/*Extilos de la pagina*/
+
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.container-instrucciones{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items: center;
+    background-color: lightblue;
+    z-index: 1;
+}
+
+.hijo-instrucciones{
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    border-radius: 15px;
+    background-color: lightcoral;
+    padding: 3rem;
+    width: 25%;
+    text-align: center;
+}
+
+.titulo{
+    font-weight: 100;
+    font-size: 1.8rem;
+    letter-spacing: 0.5rem;
+}
+
+.controles p{
+    font-size: 1.2rem;
+    padding-bottom: 1.5rem;
+}
+
+.controles hr{
+    border: 1px solid black;
+}
+
+.controles h4{
+    padding-top: 1.5rem;
+    padding-bottom: 1rem;
+}
+
+.container-iconos{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: flex-end;
+}
+
+.container-iconos span:nth-child(1){
+    width: 100%;
+}
+
+.dificultad{
+    width: 25%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.dificultad div{
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    border-radius: 15px;
+    background-color: lightcoral;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+}
+
+.boton-start{
+    font-size: 4rem;
+    cursor: pointer;
+}
