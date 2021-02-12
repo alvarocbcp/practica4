@@ -7,7 +7,7 @@ function aplicacion() {
 
     // CONSTANTES Y VARIABLES
 
-    let GRID_SIZE = 21;                                                         //Tamaño del grid, al ser cuadrado nos sirve con tener un solo lado
+    let GRID_SIZE = 61;                                                         //Tamaño del grid, al ser cuadrado nos sirve con tener un solo lado
     const tablero = document.getElementById('tablero');                         //Tablero (div) principal del html que contiene la propiedad display: grid;
     const contenedorJuego = document.querySelector(".container-juego");
 
@@ -15,6 +15,7 @@ function aplicacion() {
     let snakeBody = [{ x: Math.round(GRID_SIZE / 2), y: Math.round(GRID_SIZE / 2) }];//Cuerpo de la serpiente. Empieza siendo solo la cabeza en la posicion central del tablero
     let SNAKE_SPEED = 5;                                                         //Velocidad a la que se mueve la serpiente, va en relacion con el requestAnimationFrame y este hace que se ejecute a distintas velocidades
     let EXPANSION_RATE = 1;                                                      //Numero de cuadrados que se expande la serpiente cuando come
+    let TIEMPO_CAMBIO = 10000;                                                   //Tiempo en el que cambia la manzana de posicion si no es comida (varia segun dificultad)
     let lastRenderTime = 0;                                                      //Variable usada en el requestAnimationFrame
     let gameOver = false;                                                        //Variable que hace junto a la funcion checkMuerte() cuando se acaba la partida
     let nuevosSegmentos = 0;                                                     //Nuevos segmentos que se añaden a la serpiente cuando come una manzana
@@ -23,6 +24,7 @@ function aplicacion() {
     let lastInputDirection = { x: 0, y: 0 };                                     //Variable que indica la ultima direccion hacia donde se movia la serpiente (sirve para no poder girar 180º)
     let contadorTiempo = 0;                                                      //Segundos que dura la partida
     let contadorPuntos = 0;                                                      //Puntos totales de la partida
+    var cambiaApple;                                                             //Variable que recoge el setInterval para cambiar la manzana cada x segundos si no la atrapas
 
     //Creacion custom element pantalla inicial
 
@@ -41,10 +43,13 @@ function aplicacion() {
         connectedCallback() {
             this.shadowRoot.appendChild(this.instrucciones);
             var start = this.shadowRoot.querySelector(".boton-start");
+            //Cambia las variables del programa para la dificultad facil
             this.shadowRoot.querySelector(".facil").addEventListener('click', () => {
                 SNAKE_SPEED = 5;
                 EXPANSION_RATE = 1;
                 GRID_SIZE = 21;
+                TIEMPO_CAMBIO = 10000;
+                apple = getRandomApplePosition();
                 snakeBody = [{ x: Math.round(GRID_SIZE / 2), y: Math.round(GRID_SIZE / 2) }];
                 tablero.style.gridTemplateColumns = "repeat(" + GRID_SIZE + ", 1fr)";
                 tablero.style.gridTemplateRows = "repeat(" + GRID_SIZE + ", 1fr)";
@@ -52,10 +57,13 @@ function aplicacion() {
                     this.empezar();
                 })
             });
+            //Cambia las variables del programa para la dificultad intermedia
             this.shadowRoot.querySelector(".intermedio").addEventListener('click', () => {
                 SNAKE_SPEED = 15;
                 EXPANSION_RATE = 1;
                 GRID_SIZE = 41;
+                TIEMPO_CAMBIO = 20000;
+                apple = getRandomApplePosition();
                 snakeBody = [{ x: Math.round(GRID_SIZE / 2), y: Math.round(GRID_SIZE / 2) }];
                 tablero.style.gridTemplateColumns = "repeat(" + GRID_SIZE + ", 1fr)";
                 tablero.style.gridTemplateRows = "repeat(" + GRID_SIZE + ", 1fr)";
@@ -63,10 +71,13 @@ function aplicacion() {
                     this.empezar();
                 })
             });
+            //Cambia las variables del programa para la dificultad dificil
             this.shadowRoot.querySelector(".dificil").addEventListener('click', () => {
                 SNAKE_SPEED = 20;
                 EXPANSION_RATE = 2;
                 GRID_SIZE = 61;
+                TIEMPO_CAMBIO = 30000;
+                apple = getRandomApplePosition();
                 snakeBody = [{ x: Math.round(GRID_SIZE / 2), y: Math.round(GRID_SIZE / 2) }];
                 tablero.style.gridTemplateColumns = "repeat(" + GRID_SIZE + ", 1fr)";
                 tablero.style.gridTemplateRows = "repeat(" + GRID_SIZE + ", 1fr)";
@@ -82,6 +93,7 @@ function aplicacion() {
             var botonEmpezar = this.shadowRoot.querySelector(".boton-start");
             this.shadowRoot.querySelector(".container-instrucciones").style.display = "none";
             contadorTiempoFuncion();
+            cambiarManzana();
         }
     }
 
@@ -94,7 +106,7 @@ function aplicacion() {
 
     //Funcion principal del programa, ejecuta de continuo teniendo en cuenta la velocidad de la serpiente las funciones de actualizar y dibujar tanto la serpiente como la manzana
     function principal(currentTime) {
-        if (gameOver) { setTimeout(gameOverFuncion, 1000) }
+        if (gameOver) { setTimeout(gameOverFuncion, 1000) }                         //setTimeout espera 1 segundo despues de que la serpiente colisione para acceder a la pantalla de GAME OVER
         else {
             window.requestAnimationFrame(principal);
             const secondsSinceLastRender = (currentTime - lastRenderTime) / 1000;
@@ -107,11 +119,27 @@ function aplicacion() {
         }
     }
 
+    //Funcion que crea un contador del tiempo que dura la partida
     function contadorTiempoFuncion() {
         setInterval(function () {
             contadorTiempo++;;
             document.getElementById("tiempo").innerHTML = contadorTiempo;
         }, 1000);
+    }
+
+    //Funcion para cambiar la manzana de posicion si no se ha comido en un tiempo determinado
+    function cambiarManzana(){
+        cambiaApple = setInterval(function(){
+            apple = getRandomApplePosition();
+        }, TIEMPO_CAMBIO)
+    }
+
+    //Funcion que reanuda la funcion anterior cuando se come una manzana (es llamada en la funcion "actualizaApples")
+    function restartCambiarManzana(){
+        clearInterval(cambiaApple);
+        cambiaApple = setInterval(function(){
+            apple = getRandomApplePosition();
+        }, TIEMPO_CAMBIO)
     }
 
 
@@ -203,7 +231,6 @@ function aplicacion() {
         for (let i = 0; i < nuevosSegmentos; i++) {
             snakeBody.push({ ...snakeBody[snakeBody.length - 1] });
         }
-
         nuevosSegmentos = 0;
     }
 
@@ -214,10 +241,11 @@ function aplicacion() {
         if (onSnake(apple)) {
             expandSnake(EXPANSION_RATE);
             apple = getRandomApplePosition();
-        }
+            restartCambiarManzana();
+        }        
     }
 
-    //Dibuja la manzana en el tablero
+    //Dibuja la manzana en el tablero (roja por defecto y dorada si el contador es multiplo de 10)
     function dibujarApple(tablero) {
         if (contadorPuntos % 10 === 0 && contadorPuntos !== 0) {
             const appleElement = document.createElement('div');
@@ -294,9 +322,11 @@ function aplicacion() {
 
     //PANTALLA GAME OVER
 
+    //Ejecuta el template del game over
     function gameOverFuncion() {
         var gameOverContainer = document.querySelector(".container-gameOver");
 
+        //Clase del custom elemet GAME OVER
         class ElementoGameOver extends HTMLElement {
             constructor() {
                 super();
@@ -318,6 +348,7 @@ function aplicacion() {
                 let titulo = this.shadowRoot.querySelector(".titulo-gameOver");
 
                 let contador = 25;
+                //Animacion del titulo de la pantalla del GAME OVER
                 let intervalo = setInterval(() => {
                     if (contador == 0) {
                         clearInterval(intervalo);
