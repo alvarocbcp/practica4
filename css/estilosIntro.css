@@ -78,7 +78,6 @@
     top: 0;
     left: 0;
     flex-direction: column;
-    flex-wrap: wrap;
     justify-content: space-evenly;
     align-items: center;
     background-color: lightblue;
@@ -89,7 +88,7 @@
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     border-radius: 15px;
     background-color: lightcoral;
-    padding: 3rem;
+    padding: 10px;
     width: 25%;
     text-align: center;
 }
@@ -129,6 +128,7 @@
 .dificultad{
     width: 25%;
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
 }
 
@@ -136,7 +136,7 @@
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     border-radius: 15px;
     background-color: lightcoral;
-    padding: 2rem;
+    padding: 10px;
     text-align: center;
     cursor: pointer;
 }

@@ -7,22 +7,22 @@ function aplicacion() {
 
     // CONSTANTES Y VARIABLES
 
-    let GRID_SIZE = 21;                                     //Tamaño del grid, al ser cuadrado nos sirve con tener un solo lado
-    const tablero = document.getElementById('tablero');     //Tablero (div) principal del html que contiene la propiedad display: grid;
+    let GRID_SIZE = 21;                                                         //Tamaño del grid, al ser cuadrado nos sirve con tener un solo lado
+    const tablero = document.getElementById('tablero');                         //Tablero (div) principal del html que contiene la propiedad display: grid;
     const contenedorJuego = document.querySelector(".container-juego");
 
 
-    let snakeBody = [{ x: 11, y: 11 }];                     //Cuerpo de la serpiente. Empieza siendo solo la cabeza en la posicion central del tablero
-    let SNAKE_SPEED = 5;                                    //Velocidad a la que se mueve la serpiente, va en relacion con el requestAnimationFrame y este hace que se ejecute a distintas velocidades
-    let EXPANSION_RATE = 1;                                 //Numero de cuadrados que se expande la serpiente cuando come
-    let lastRenderTime = 0;                                 //Variable usada en el requestAnimationFrame
-    let gameOver = false;                                   //Variable que hace junto a la funcion checkMuerte() cuando se acaba la partida
-    let nuevosSegmentos = 0;                                //Nuevos segmentos que se añaden a la serpiente cuando come una manzana
-    let apple = getRandomApplePosition();                   //Creacion de una manzana de forma aleatoria en el tablero
-    let inputDirection = { x: 0, y: 0 };                    //Variable que indica la direccion hacia donde se mueve la serpiente
-    let lastInputDirection = { x: 0, y: 0 };                //Variable que indica la ultima direccion hacia donde se movia la serpiente (sirve para no poder girar 180º)
-    let contadorTiempo = 0;                                 //Segundos que dura la partida
-    let contadorPuntos = 0;                                 //Puntos totales de la partida
+    let snakeBody = [{ x: Math.round(GRID_SIZE / 2), y: Math.round(GRID_SIZE / 2) }];//Cuerpo de la serpiente. Empieza siendo solo la cabeza en la posicion central del tablero
+    let SNAKE_SPEED = 5;                                                         //Velocidad a la que se mueve la serpiente, va en relacion con el requestAnimationFrame y este hace que se ejecute a distintas velocidades
+    let EXPANSION_RATE = 1;                                                      //Numero de cuadrados que se expande la serpiente cuando come
+    let lastRenderTime = 0;                                                      //Variable usada en el requestAnimationFrame
+    let gameOver = false;                                                        //Variable que hace junto a la funcion checkMuerte() cuando se acaba la partida
+    let nuevosSegmentos = 0;                                                     //Nuevos segmentos que se añaden a la serpiente cuando come una manzana
+    let apple = getRandomApplePosition();                                        //Creacion de una manzana de forma aleatoria en el tablero
+    let inputDirection = { x: 0, y: 0 };                                         //Variable que indica la direccion hacia donde se mueve la serpiente
+    let lastInputDirection = { x: 0, y: 0 };                                     //Variable que indica la ultima direccion hacia donde se movia la serpiente (sirve para no poder girar 180º)
+    let contadorTiempo = 0;                                                      //Segundos que dura la partida
+    let contadorPuntos = 0;                                                      //Puntos totales de la partida
 
     //Creacion custom element pantalla inicial
 
@@ -40,34 +40,42 @@ function aplicacion() {
 
         connectedCallback() {
             this.shadowRoot.appendChild(this.instrucciones);
+            var start = this.shadowRoot.querySelector(".boton-start");
             this.shadowRoot.querySelector(".facil").addEventListener('click', () => {
                 SNAKE_SPEED = 5;
                 EXPANSION_RATE = 1;
                 GRID_SIZE = 21;
-                snakeBody = [{ x: Math.round(GRID_SIZE/2), y: Math.round(GRID_SIZE/2) }];
+                snakeBody = [{ x: Math.round(GRID_SIZE / 2), y: Math.round(GRID_SIZE / 2) }];
                 tablero.style.gridTemplateColumns = "repeat(" + GRID_SIZE + ", 1fr)";
                 tablero.style.gridTemplateRows = "repeat(" + GRID_SIZE + ", 1fr)";
+                start.addEventListener('click', () => {
+                    this.empezar();
+                })
             });
             this.shadowRoot.querySelector(".intermedio").addEventListener('click', () => {
                 SNAKE_SPEED = 15;
                 EXPANSION_RATE = 1;
                 GRID_SIZE = 41;
-                snakeBody = [{ x: Math.round(GRID_SIZE/2), y: Math.round(GRID_SIZE/2) }];
+                snakeBody = [{ x: Math.round(GRID_SIZE / 2), y: Math.round(GRID_SIZE / 2) }];
                 tablero.style.gridTemplateColumns = "repeat(" + GRID_SIZE + ", 1fr)";
                 tablero.style.gridTemplateRows = "repeat(" + GRID_SIZE + ", 1fr)";
+                start.addEventListener('click', () => {
+                    this.empezar();
+                })
             });
             this.shadowRoot.querySelector(".dificil").addEventListener('click', () => {
                 SNAKE_SPEED = 20;
                 EXPANSION_RATE = 2;
                 GRID_SIZE = 61;
-                snakeBody = [{ x: Math.round(GRID_SIZE/2), y: Math.round(GRID_SIZE/2) }];
+                snakeBody = [{ x: Math.round(GRID_SIZE / 2), y: Math.round(GRID_SIZE / 2) }];
                 tablero.style.gridTemplateColumns = "repeat(" + GRID_SIZE + ", 1fr)";
                 tablero.style.gridTemplateRows = "repeat(" + GRID_SIZE + ", 1fr)";
+                start.addEventListener('click', () => {
+                    this.empezar();
+                })
             });
-            var start = this.shadowRoot.querySelector(".boton-start");
-            start.addEventListener('click', () => {
-                this.empezar();
-            })
+
+
         }
 
         empezar() {
@@ -86,7 +94,7 @@ function aplicacion() {
 
     //Funcion principal del programa, ejecuta de continuo teniendo en cuenta la velocidad de la serpiente las funciones de actualizar y dibujar tanto la serpiente como la manzana
     function principal(currentTime) {
-        if (gameOver) {setTimeout(gameOverFuncion, 1000)}
+        if (gameOver) { setTimeout(gameOverFuncion, 1000) }
         else {
             window.requestAnimationFrame(principal);
             const secondsSinceLastRender = (currentTime - lastRenderTime) / 1000;
@@ -156,11 +164,11 @@ function aplicacion() {
 
     //Expande la serpiente cuando come una manzana
     function expandSnake(cantidad) {
-        if(contadorPuntos%10 === 0 && contadorPuntos !== 0){
-            nuevosSegmentos += (cantidad*2);
+        if (contadorPuntos % 10 === 0 && contadorPuntos !== 0) {
+            nuevosSegmentos += (cantidad * 2);
             contadorPuntos = contadorPuntos + 3;
         }
-        else{
+        else {
             nuevosSegmentos += cantidad;
             contadorPuntos++;
         }
@@ -211,14 +219,14 @@ function aplicacion() {
 
     //Dibuja la manzana en el tablero
     function dibujarApple(tablero) {
-        if(contadorPuntos%10 === 0 && contadorPuntos !== 0){
+        if (contadorPuntos % 10 === 0 && contadorPuntos !== 0) {
             const appleElement = document.createElement('div');
             appleElement.style.gridRowStart = apple.y;
             appleElement.style.gridColumnStart = apple.x;
             appleElement.classList.add('appleDorada');
             tablero.appendChild(appleElement);
         }
-        else{
+        else {
             const appleElement = document.createElement('div');
             appleElement.style.gridRowStart = apple.y;
             appleElement.style.gridColumnStart = apple.x;
